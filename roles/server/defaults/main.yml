@@ -1,0 +1,9 @@
+---
+# set to 'no' or 'false' to disable item
+backups: false
+file_sharing: false
+docker_apps: true
+
+# base-os configuration
+base-os: true
+

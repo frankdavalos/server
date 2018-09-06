@@ -1,0 +1,5 @@
+---
+dockeruser: dockeruser
+dockergroup: dockergroup
+
+appdata: /opt/appdata

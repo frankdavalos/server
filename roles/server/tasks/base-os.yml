@@ -1,0 +1,62 @@
+---
+- name: Ensure os is up to date
+  apt:
+    update_cache: yes
+    upgrade: full
+    cache_valid_time: 300
+
+- name: Install packages
+  apt: pkg={{ item }} state=present
+  with_items:
+    - bash-completion
+    - curl
+    - parted
+    - python
+#    - exiftool
+#    - fuse
+#    - glances
+#    - git
+#    - htop
+#    - iftop
+#    - iotop
+#    - jq
+#    - lynx
+#    - mc
+#    - ncdu
+#    - nmap
+#    - openssh-server
+#    - python
+#    - reptyr
+#    - screen
+#    - smartmontools
+#    - sudo
+#    - tmux
+#    - tree
+#    - wget
+#    - xfsprogs
+#    - youtube-dl
+  tags:
+    - packages
+
+- name: Create a new primary partition for /dev/sdb
+  parted:
+    device: /dev/sdb
+    number: 1
+    state: present
+
+- name: Create a ext4 filesystem on /dev/sdb1
+  filesystem:
+    fstype: ext4
+    dev: /dev/sdb1
+
+- name: Create storage mount
+  mount:
+    fstype: ext4
+    src: /dev/sdb1
+    path: /mnt/storage
+    state: mounted
+
+- name: Chown storage mount
+  file:
+    path: /mnt/storage
+    mode: 0777

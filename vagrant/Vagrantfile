@@ -1,0 +1,35 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+disk = "storage.vdi"
+
+Vagrant.configure(2) do |config|
+  config.vm.define "server" do |server|
+    server.vm.box = "debian/stretch64"
+    server.vm.hostname = "server"
+    server.vm.network "forwarded_port", guest: 32400, host: 32400
+    server.vm.network "forwarded_port", guest: 8181, host: 8181
+
+    # server.vm.network :private_network, ip: "192.168.1.10"
+
+    server.vm.provider "virtualbox" do |vb|
+        vb.memory = "2048"
+        vb.cpus = "2"
+        # Create a second disk (2G)
+        unless File.exist? (disk)
+            vb.customize ['createhd', '--filename', disk, '--size', 2 * 1024]
+        end
+        vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type',  'hdd', '--medium', disk]
+    end
+
+# Bootstrap python if Ansible doesn't work OOB
+#    config.vm.provision :shell, :path => "bootstrap.sh",
+#        run: "once"
+
+    config.vm.provision :ansible do |ansible|
+        # ansible.verbose = "vvv"
+        ansible.playbook = "../playbooks/provision-vagrant.yml"
+        ansible.config_file = "../ansible.cfg"
+    end
+  end
+end

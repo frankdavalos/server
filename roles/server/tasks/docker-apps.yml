@@ -1,0 +1,40 @@
+---
+- name: create group for docker appdata
+  group:
+    name: "{{dockergroup}}"
+    state: present
+    gid: 1050
+
+- name: create user for docker appdata
+  user:
+    name: "{{dockeruser}}"
+    shell: /sbin/nologin
+    uid: 1050
+    group: "{{dockergroup}}"
+
+- name: create docker appdata base directory
+  file:
+    dest: "{{ appdata }}"
+    state: directory
+    #recurse: yes
+    owner: "{{dockeruser}}"
+    group: "{{dockergroup}}"
+
+- name: set docker PUID and PGID environment variables for compose
+  copy:
+    src: "etc/environment"
+    dest: "/etc/environment"
+    owner: root
+    group: root
+    mode: 0775
+
+- name: copy docker-compose.yml into position
+  copy:
+    src: "opt/docker-compose.yml"
+    dest: "/opt/docker-compose.yml"
+    owner: nobody
+    group: nogroup
+    mode: 0775
+
+- name: use docker-compose to bring up apps
+  shell: docker-compose -f /opt/docker-compose.yml up -d

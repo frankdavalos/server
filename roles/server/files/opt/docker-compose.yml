@@ -1,0 +1,136 @@
+---
+version: '2'
+services:
+  plex:
+    image: plexinc/pms-docker:plexpass
+    container_name: plex
+    volumes:
+      - /opt/appdata/plex:/config
+      - /mnt/storage:/data
+    network_mode: host
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - PLEX_CLAIM=""
+  tautulli:
+    image: tautulli/tautulli
+    container_name: tautulli
+    depends_on:
+      - plex
+    volumes:
+      - /opt/appdata/tautulli:/config
+      - /opt/appdata/plex/Library/Application\ Support/Plex\ Media\ Server/Logs:/logs:ro
+    ports:
+    - 8181:8181
+    links:
+    - plex
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+#  sonarr:
+#    image: linuxserver/sonarr
+#    container_name: sonarr
+#    volumes:
+#      - /etc/localtime:/etc/localtime:ro
+#      - ${CONFIG_VOLUME}/linuxserver-sonarr/config:/config
+#      - ${NAS}/Media/TVShows:/tv
+#      - ${NAS}/Downloads:/downloads
+#    ports:
+#      - 8989:8989
+#    restart: always
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TZ}
+#  radarr:
+#    image: linuxserver/radarr
+#    container_name: radarr
+#    volumes:
+#      - /etc/localtime:/etc/localtime:ro
+#      - ${CONFIG_VOLUME}/linuxserver-radarr/config:/config
+#      - ${NAS}/Media/Movies:/movies
+#      - ${NAS}/Downloads:/downloads
+#    ports:
+#      - 7878:7878
+#    restart: always
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TZ}
+#  nzbget:
+#    image: linuxserver/nzbget
+#    container_name: nzbget
+#    volumes:
+#      - ${CONFIG_VOLUME}/linuxserver-nzbget/config:/config
+#      - ${NAS}/Downloads:/downloads
+#    ports:
+#      - 6799:6799
+#    restart: always
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TZ}
+#  heimdall:
+#    image: linuxserver/heimdall
+#    container_name: heimdall
+#    volumes:
+#      - ${CONFIG_VOLUME}/linuxserver-heimdall/config:/config
+#    ports:
+#      - 80:80
+#    restart: always
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TZ}
+#  lidarr:
+#    image: linuxserver/lidarr
+#    container_name: lidarr
+#    volumes:
+#      - ${CONFIG_VOLUME}/linuxserver-lidarr/config:/config
+#      - ${NAS}/Downloads:/downloads
+#      - ${NAS}/Media/Music:/music
+#    ports:
+#      - 8686:8686
+#    restart: always
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TZ}
+#  syncthing:
+#    image: linuxserver/syncthing
+#    container_name: syncthing
+#    volumes:
+#      - ${CONFIG_VOLUME}/linuxserver-syncthing/config:/config
+#      - ${LOCAL_DSK}/syncthing:/syncthing
+#    ports:
+#      - 8384:8384
+#      - 22000:22000
+#      - 21027:21027/udp
+#    restart: always
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TZ}
+#  unifi:
+#    container_name: unifi
+#    image: linuxserver/unifi
+#    restart: always
+#    volumes:
+#      - ${CONFIG_VOLUME}/linuxserver-unifi/config:/config
+#    ports:
+#      - '3478:3478/udp'
+#      - '10001:10001/udp'
+#      - '6789:6789'
+#      - '8080:8080'
+#      - '8081:8081'
+#      - '8880:8880'
+#      - '8443:8443'
+#      - '8843:8843'
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TZ}

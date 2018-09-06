@@ -1,0 +1,13 @@
+---
+# server specific setup
+- name: configure base-os
+  include_tasks: base-os.yml
+  when: base-os
+  tags: baseos
+
+- name: configure docker apps (plex, etc)
+  include_tasks: docker-apps.yml
+  when: docker_apps
+  tags: docker_apps
+
+
