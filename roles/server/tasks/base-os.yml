@@ -12,29 +12,6 @@
     - curl
     - parted
     - python
-#    - exiftool
-#    - fuse
-#    - glances
-#    - git
-#    - htop
-#    - iftop
-#    - iotop
-#    - jq
-#    - lynx
-#    - mc
-#    - ncdu
-#    - nmap
-#    - openssh-server
-#    - python
-#    - reptyr
-#    - screen
-#    - smartmontools
-#    - sudo
-#    - tmux
-#    - tree
-#    - wget
-#    - xfsprogs
-#    - youtube-dl
   tags:
     - packages
 
@@ -44,7 +21,7 @@
     number: 1
     state: present
 
-- name: Create a ext4 filesystem on /dev/sdb1
+- name: Create an ext4 filesystem on /dev/sdb1
   filesystem:
     fstype: ext4
     dev: /dev/sdb1
