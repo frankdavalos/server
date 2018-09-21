@@ -5,8 +5,10 @@ services:
     image: plexinc/pms-docker:plexpass
     container_name: plex
     volumes:
-      - /opt/appdata/plex:/config
-      - /mnt/storage:/data
+      - /opt/appdata/plexinc/config:/config
+      - /mnt/nas/Media:/data
+      - /mnt/storage/plexTranscoder:/transcode
+      - /mnt/storage/plextmp:/tmp
     network_mode: host
     restart: always
     environment:
@@ -20,8 +22,8 @@ services:
     depends_on:
       - plex
     volumes:
-      - /opt/appdata/tautulli:/config
-      - /opt/appdata/plex/Library/Application\ Support/Plex\ Media\ Server/Logs:/logs:ro
+      - /opt/appdata/tautulli/config:/config
+      - /opt/appdata/plexinc/config/Library/Application Support/Plex Media Server/Logs:/logs:ro
     ports:
     - 8181:8181
     links:
@@ -37,8 +39,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /opt/appdata/linuxserver-sonarr/config:/config
-      - /mnt/storage/Media/TVShows:/tv
-      - /mnt/storage/Downloads:/downloads
+      - /mnt/nas/Media/TVShows:/tv
+      - /mnt/nas/Downloads:/downloads
     ports:
       - 8989:8989
     restart: always
@@ -52,8 +54,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /opt/appdata/linuxserver-radarr/config:/config
-      - /mnt/storage/Media/Movies:/movies
-      - /mnt/storage/Downloads:/downloads
+      - /mnt/nas/Media/Movies:/movies
+      - /mnt/nas/Downloads:/downloads
     ports:
       - 7878:7878
     restart: always
@@ -66,9 +68,9 @@ services:
     container_name: nzbget
     volumes:
       - /opt/appdata/linuxserver-nzbget/config:/config
-      - /mnt/storage/Downloads:/downloads
+      - /mnt/nas/Downloads:/downloads
     ports:
-      - 6799:6799
+      - 6789:6789
     restart: always
     environment:
       - PUID=${PUID}
@@ -91,8 +93,8 @@ services:
     container_name: lidarr
     volumes:
       - /opt/appdata/linuxserver-lidarr/config:/config
-      - /mnt/storage/Downloads:/downloads
-      - /mnt/storage/Media/Music:/music
+      - /mnt/nas/Downloads:/downloads
+      - /mnt/nas/Media/Music:/music
     ports:
       - 8686:8686
     restart: always
@@ -124,7 +126,8 @@ services:
     ports:
       - '3478:3478/udp'
       - '10001:10001/udp'
-      - '6789:6789'
+# Port 6789 used for mobile speed tests collides with default nzbget
+#      - '6789:6789'
       - '8080:8080'
       - '8081:8081'
       - '8880:8880'

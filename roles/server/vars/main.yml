@@ -3,3 +3,4 @@ dockeruser: dockeruser
 dockergroup: dockergroup
 
 appdata: /opt/appdata
+downloaddir: /opt/downloads

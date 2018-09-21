@@ -1,22 +1,22 @@
 ---
 - include_tasks: setup-{{ ansible_os_family }}.yml
-- name: Install Docker
+- name: install Docker
   package:
     name: "{{ docker_package }}"
     state: "{{ docker_package_state }}"
   notify: restart docker
 
-- name: Ensure Docker is started and enabled at boot
+- name: ensure Docker is started and enabled at boot
   service:
     name: docker
     state: "{{ docker_service_state }}"
     enabled: "{{ docker_service_enabled }}"
 
-- name: Ensure handlers are notified now to avoid firewall conflicts
+- name: ensure handlers are notified now to avoid firewall conflicts
   meta: flush_handlers
   when: docker_restart_on_package_change
 
-- name: Ensure docker users are added to the docker group
+- name: ensure docker users are added to the docker group
   user:
     name: "{{ item }}"
     group: docker

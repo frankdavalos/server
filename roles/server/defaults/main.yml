@@ -1,6 +1,6 @@
 ---
 # set to 'no' or 'false' to disable item
-backups: false
+backups: true
 file_sharing: false
 docker_apps: true
 

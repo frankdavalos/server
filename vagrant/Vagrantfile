@@ -2,46 +2,53 @@
 # vi: set ft=ruby :
 
 disk = "storage.vdi"
+netdisk = "nas.vdi"
 
 Vagrant.configure(2) do |config|
   config.vm.define "server" do |server|
     server.vm.box = "debian/stretch64"
     server.vm.hostname = "server"
-    server.vm.network "forwarded_port", guest: 32400, host: 32400
-    server.vm.network "forwarded_port", guest: 8181, host: 8181
-    server.vm.network "forwarded_port", guest: 8989, host: 8989
+    server.vm.network "forwarded_port", guest: 80, host: 8282
+    server.vm.network "forwarded_port", guest: 3478, host: 3478, protocol: "udp"
+    server.vm.network "forwarded_port", guest: 6789, host: 6789
     server.vm.network "forwarded_port", guest: 6799, host: 6799
     server.vm.network "forwarded_port", guest: 7878, host: 7878
-    server.vm.network "forwarded_port", guest: 8686, host: 8686
-    server.vm.network "forwarded_port", guest: 80, host: 8282
-    server.vm.network "forwarded_port", guest: 8384, host: 8384
-    server.vm.network "forwarded_port", guest: 22000, host: 22000
-    server.vm.network "forwarded_port", guest: 21027, host: 21027, protocol: "udp"
-    server.vm.network "forwarded_port", guest: 3478, host: 3478, protocol: "udp"
-    server.vm.network "forwarded_port", guest: 10001, host: 10001, protocol: "udp"
-    server.vm.network "forwarded_port", guest: 6789, host: 6789
     server.vm.network "forwarded_port", guest: 8080, host: 8080
     server.vm.network "forwarded_port", guest: 8081, host: 8081
-    server.vm.network "forwarded_port", guest: 8880, host: 8880
+    server.vm.network "forwarded_port", guest: 8181, host: 8181
+    server.vm.network "forwarded_port", guest: 8384, host: 8384
     server.vm.network "forwarded_port", guest: 8443, host: 8443
+    server.vm.network "forwarded_port", guest: 8686, host: 8686
     server.vm.network "forwarded_port", guest: 8843, host: 8843
+    server.vm.network "forwarded_port", guest: 8880, host: 8880
+    server.vm.network "forwarded_port", guest: 8989, host: 8989
+    server.vm.network "forwarded_port", guest: 10001, host: 10001, protocol: "udp"
+    server.vm.network "forwarded_port", guest: 21027, host: 21027, protocol: "udp"
+    server.vm.network "forwarded_port", guest: 22000, host: 22000
+    server.vm.network "forwarded_port", guest: 32400, host: 32400
 
-
+    # Specify private network ip
     # server.vm.network :private_network, ip: "192.168.1.10"
 
     server.vm.provider "virtualbox" do |vb|
         vb.memory = "2048"
         vb.cpus = "2"
-        # Create a second disk (2G)
+        # Create a storage disk (2GB)
         unless File.exist? (disk)
             vb.customize ['createhd', '--filename', disk, '--size', 2 * 1024]
         end
+
+        # Create a simulated nas disk (2GB)
+        unless File.exist? (netdisk)
+            vb.customize ['createhd', '--filename', netdisk, '--size', 2 * 1024]
+        end
+
         vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type',  'hdd', '--medium', disk]
+        vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 2, '--device', 0, '--type',  'hdd', '--medium', netdisk]
     end
 
-# Bootstrap python if Ansible doesn't work OOB
-#    config.vm.provision :shell, :path => "bootstrap.sh",
-#        run: "once"
+  # Bootstrap, runs on machine start
+  # config.vm.provision :shell, :path => "bootstrap.sh", run: "once"
 
     config.vm.provision :ansible do |ansible|
         # ansible.verbose = "vvv"

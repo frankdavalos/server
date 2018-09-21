@@ -21,5 +21,5 @@ if [ "$DISTRO" == "Ubuntu" ]; then
     apt-get update
 
     # install python
-    apt-get install python-dev python-pip -q -y
+    # apt-get install python-dev python-pip -q -y
 fi

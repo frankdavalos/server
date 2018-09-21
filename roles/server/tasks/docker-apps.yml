@@ -20,6 +20,23 @@
     owner: "{{dockeruser}}"
     group: "{{dockergroup}}"
 
+- name: ensure download folder is present
+  file:
+    dest: "{{ downloaddir }}"
+    state: directory
+    recurse: yes
+    owner: "{{ dockeruser }}"
+    group: "{{ dockergroup }}"
+
+- name: ensure torrent download dir is present
+  file:
+    dest: "{{ downloaddir }}/torrents"
+    state: directory
+    recurse: yes
+    owner: "{{ dockeruser }}"
+    group: "{{ dockergroup }}"
+
+
 - name: set docker PUID and PGID environment variables for compose
   copy:
     src: "etc/environment"

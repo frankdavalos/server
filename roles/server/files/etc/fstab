@@ -11,3 +11,4 @@ UUID=8e404d80-3269-49b5-a29a-1909fc1a6d3f /               ext4    errors=remount
 UUID=33f378a7-9f98-4736-8287-61c6f655c73c none            swap    sw              0       0
 /dev/sr0        /media/cdrom0   udf,iso9660 user,noauto     0       0
 /dev/sdb1 /mnt/storage ext4 defaults 0 0
+/dev/sdc1 /mnt/nas ext4 defaults 0 0

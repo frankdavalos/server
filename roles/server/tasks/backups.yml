@@ -1,0 +1,6 @@
+- name: ensure a job that runs at 03 to backup /opt/appdata to /mnt/nas/backup
+  cron:
+    name: "check dirs"
+    minute: "0"
+    hour: "3"
+    job: "cp -rp /opt/appdata/ /mnt/nas/backups"
